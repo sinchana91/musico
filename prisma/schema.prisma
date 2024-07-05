@@ -9,6 +9,42 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "mongodb"
   url      = env("DATABASE_URL")
+}
+
+model User {
+  id       String  @id @default(auto()) @map("_id") @db.ObjectId
+  name     String
+  email    String  @unique
+  password String
+  listeningHistory String[]
+  genres String[]
+  playlists Playlist[]
+}
+
+model Song {
+  id       String  @id @default(auto()) @map("_id") @db.ObjectId
+  title    String
+  artist   String
+  genre    String
+  duration Int
+  playlists PlaylistSongs[] 
+}
+
+model Playlist {
+  id       String  @id @default(auto()) @map("_id") @db.ObjectId
+  name     String
+  user User @relation(fields: [userId], references: [id])
+  userId   String @db.ObjectId
+  songs PlaylistSongs[] 
+}
+
+model PlaylistSongs {
+  id      String  @id @default(auto()) @map("_id") @db.ObjectId
+  playlist Playlist @relation(fields: [playlistId], references: [id])
+  playlistId String @db.ObjectId
+  song Song @relation(fields: [songId], references: [id])
+  songId String @db.ObjectId
+  @@unique([playlistId, songId])
 }
