@@ -1,13 +1,13 @@
 import axios from 'axios';
 
 
-const getRecommendationSongs=async(SongTitle)=>{
+const getRecommendationSongs=async(songId)=>{
     try{
-        const response=await axios.get(`http://localhost:5000/recommendation/recommend`,{song_title:SongTitle});
+        const response =await axios.post('http://localhost:5001/recommend', { song_id: songId });
         return response.data;
     }catch(error){
         console.error(error);
-        return {message:error.message};
+    throw new Error('Error fetching recommendations from Python');
     }
 
 

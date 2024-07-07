@@ -1,15 +1,19 @@
-import { getRecommendationSongs } from "../services/pythonService";
+import prisma from '../config/db.js';
 
+export const recommendSongs = async (req, res) => {
+    const { song_id } = req.body;
+    try {
+        const song = await prisma.song.findUnique({ where: { id: song_id } });
+        if (!song) return res.status(404).json({ error: 'Song not found' });
 
-const getRecommendtion=async(req,res)=>{
-    const {songTitle}=req.body;
-    try{
-        const songs=await getRecommendationSongs(songTitle);
-        res.status(200).json({songs});
-    }catch(error){
-        console.error(error);
-        res.status(500).json({message:error.message});
+        const similarSongs = await prisma.song.findMany({
+            where: {
+                genre: song.genre,
+                id: { not: song_id }
+            }
+        });
+        res.json(similarSongs);
+    } catch (error) {
+        res.status(500).json({ error: 'Internal Server Error' });
     }
-}
-
-export {getRecommendtion};
+};
