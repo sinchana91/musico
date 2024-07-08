@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -23,15 +17,6 @@ model User {
   playlists Playlist[]
 }
 
-model Song {
-  id       String  @id @default(auto()) @map("_id") @db.ObjectId
-  title    String
-  artist   String
-  genre    String
-  duration Int
-  playlists PlaylistSongs[] 
-}
-
 model Playlist {
   id       String  @id @default(auto()) @map("_id") @db.ObjectId
   name     String
@@ -44,7 +29,6 @@ model PlaylistSongs {
   id      String  @id @default(auto()) @map("_id") @db.ObjectId
   playlist Playlist @relation(fields: [playlistId], references: [id])
   playlistId String @db.ObjectId
-  song Song @relation(fields: [songId], references: [id])
-  songId String @db.ObjectId
+  songId String
   @@unique([playlistId, songId])
 }
