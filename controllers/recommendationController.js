@@ -15,7 +15,7 @@ const fetchSongFromAPI = async (id) => {
 const fetchSOngsByGenreFromAPI = async (genre) => { 
     try{
         const response=await axios.get('https://musicbrainz.org/ws/2/recording',{
-            params:{query:`tag:${genre}`,fmt:'json',limit=10},
+            params:{query:`tag:${genre}`,fmt:'json',limit:10},
             headers:{Accept:'application/json'}
         });
         return response.data.recordings;
@@ -44,3 +44,4 @@ export const recommendSongs=async(req,res)=>{
         console.error(error);
         res.status(500).json({message:error.message});
     }
+}

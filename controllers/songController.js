@@ -11,7 +11,7 @@ import axios from 'axios';
 //     }
 // }
 
-const fetchSongsFromAPI=async(query){
+const fetchSongsFromAPI=async(query)=>{
     try{
         const response = await axios.get('https://musicbrainz.org/ws/2/recording', {
             params: { query,fmt:'json', limit: 10 },

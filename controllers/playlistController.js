@@ -1,4 +1,4 @@
-import prisma from "../config/db";
+import prisma from "../config/db.js";
 
 const createPlaylist = async (req, res) => {
     const {name,songs}=req.body;
