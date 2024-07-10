@@ -39,7 +39,7 @@ const fetchSongsFromAPI=async(query)=>{
 
 const getAllSongs = async (req, res) => {
     try{
-        const songs = await fetchSongsFromAPI(''); // Fetch top songs or any default query
+        const songs = await fetchSongsFromAPI('tag:rock'); // Fetch top songs or any default query
         res.status(200).json({ songs });
     }catch(error){
         console.error(error);
