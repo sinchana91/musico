@@ -1,9 +1,22 @@
 import axios from 'axios';
+import pkg from '@mhoc/axios-digest-auth';
+const {AxiosDigestAuth} = pkg;
+
+const USERNAME = 'sinchi';
+const PASSWORD = 'sinchi@2003';
+
+const digestAuth = new AxiosDigestAuth({
+    username:USERNAME,
+    password:PASSWORD,
+  });
+
 
 const fetchSongFromAPI = async (id) => {
     try {
-        const response = await axios.get(`https://musicbrainz.org/ws/2/recording/${id}`, {
-            params: { fmt: 'json', inc: 'tags' },
+        const response = await digestAuth.request({
+            method:"GET",
+            url:`https://musicbrainz.org/ws/2/recording/${id}`,
+            params: { fmt: 'json', inc: 'genres user-genres tags' },
             headers: { Accept: 'application/json' }
         });
         return response.data;
@@ -15,7 +28,9 @@ const fetchSongFromAPI = async (id) => {
 
 const fetchSongsByGenreFromAPI = async (genre) => {
     try {
-        const response = await axios.get('https://musicbrainz.org/ws/2/recording', {
+        const response = await digestAuth.request({
+            method:"GET",
+            url:'https://musicbrainz.org/ws/2/recording', 
             params: { query: `tag:${genre}`, fmt: 'json', limit: 10 },
             headers: { Accept: 'application/json' }
         });
@@ -26,19 +41,18 @@ const fetchSongsByGenreFromAPI = async (genre) => {
     }
 };
 
-
 const recommendSongs = async (req, res) => {
     const { song_id } = req.query;
-    if(!song_id) return res.status(400).json({ error: 'Song ID is required' });
+    if (!song_id) return res.status(400).json({ error: 'Song ID is required' });
     try {
-        
         const song = await fetchSongFromAPI(song_id);
         if (!song) {
             return res.status(404).json({ error: 'Song not found' });
         }
         const tags = song.tags || [];
-        const genre = tags.length > 0 ? tags[0].name : null;
-        
+        const genres = song['genre-list'] || [];
+        const genre = tags.length > 0 ? tags[0].name : genres.length > 0 ? genres[0].name : null;
+
         if (!genre) {
             return res.status(404).json({ error: 'Genre not found' });
         }
