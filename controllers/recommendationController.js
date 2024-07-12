@@ -5,8 +5,8 @@
 // Function to fetch song details from Spotify
 import axios from 'axios';
 
-const CLIENT_ID = '461004eccffb4a2e9216fd15855d8d38';
-const CLIENT_SECRET = 'a2ab5743e21a45e4b96d2bec94c8d48d';
+const CLIENT_ID =  process.env.CLIENT_ID;
+const CLIENT_SECRET = process.env.CLIENT_SECRET;
 let accessToken = null;
 
 const getAccessToken = async () => {
